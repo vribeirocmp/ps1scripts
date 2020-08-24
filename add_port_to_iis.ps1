@@ -6,7 +6,7 @@ param(
     )
 
 
-
+#Script para executar com direitos elevados (Run As Administrator)
 function Test-Admin {
   $currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
   $currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
@@ -24,6 +24,8 @@ if ((Test-Admin) -eq $false)  {
 exit
 }
 
+
+#Captura a Porta atual do Site
 $actual_port = Get-WebBinding -Name $branch | Select-Object -ExpandProperty bindingInformation | ForEach-Object { @($_ -split ':')[1]}
  
 
@@ -33,6 +35,7 @@ $actual_port = Get-WebBinding -Name $branch | Select-Object -ExpandProperty bind
 'numero da porta: ' + $port
 
  
+#Verifica se a porta atual do Site e igual a Porta enviada por parametro
 if($port -eq [int]$actual_port)
 {
     Get-WebBinding -Port $port -Name $branch | Remove-WebBinding
